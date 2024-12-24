@@ -1,5 +1,12 @@
 import SessionCard from "../components/SessionCard";
 import NavBar from "../components/NavBar";
+import { KeycloakTokenParsed } from "keycloak-js";
+
+interface ProtectedProps {
+	user: KeycloakTokenParsed|undefined;
+	logout: () => void;
+}
+
 const Protected = () => {
 	return (
 		<>

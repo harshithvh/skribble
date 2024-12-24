@@ -1,22 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import Keycloak from 'keycloak-js';
+
 const useAuth = () => {
     const [isLogin, setLogin] = useState(false);
     const isRun = useRef(false);
     const [user, setUser] = useState<Keycloak.KeycloakTokenParsed | undefined>(undefined);
     const keycloakRef = useRef<Keycloak.KeycloakInstance | null>(null);
+
     useEffect(() => {
+
         if (isRun.current) return;
         isRun.current = true;
+
         const client = new Keycloak({
-          url: import.meta.env.VITE_KEYCLOAK_URL,
-          realm: import.meta.env.VITE_KEYCLOAK_REALM,
-          clientId: import.meta.env.VITE_KEYCLOAK_CLIENT,
+          url: "http://localhost:8080",
+          realm: "whiteboard-realm-react",
+          clientId: "whiteboard-client-react",
         });
         console.log(client);
         
         keycloakRef.current = client;
-        client.init({ onLoad: "login-required" }).then((authenticated: boolean) => {
+        client.init({ 
+            onLoad: "login-required" 
+        })
+        .then((authenticated: boolean) => {
             setLogin(authenticated);
             if (authenticated) {
                 setUser(client.tokenParsed);
@@ -27,6 +34,7 @@ const useAuth = () => {
             console.error('Failed to initialize Keycloak:', error);
         });
     }, []);
+    
     const logout = () => {
         if (keycloakRef.current) {
             keycloakRef.current.logout({
