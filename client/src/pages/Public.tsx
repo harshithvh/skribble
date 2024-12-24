@@ -52,7 +52,7 @@ const Public = () => {
 								/>
 							</h1>
 							<p>
-							    Skribble is a real-time collaborative whiteboard platform
+							  Skribble is a real-time collaborative whiteboard platform
 								designed to enhance teamwork. Create, share, and innovate
 								effortlessly with intuitive tools that transform ideas into
 								visuals, regardless of distance

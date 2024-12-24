@@ -11,9 +11,17 @@ const Menu = ({ id }: { id: string | undefined }) => {
           }, 3000);
       };
     return (
-        <Button variant="dark" className="position-absolute end-0 bottom-0" onClick={()=>{
+        <Button variant="dark" className="position-absolute end-0 bottom-0" style={{
+            fontWeight: "bold",
+            backgroundColor: "#343a40",
+            color: "#fff",
+            padding: "0.5rem 1rem",
+            borderRadius: "5px",
+            boxShadow: "0 4px 6px rgba(0,0,0,0.2)"
+        }} 
+        onClick={()=>{
             copyToClipboard();
-        }}>{copySuccess!=""?"Copied ID!":"Click to copy ID "+id}</Button>
+        }}>{copySuccess!=""?"Copied ID!":"Copy Board ID - "+id}</Button>
     )
 };
 

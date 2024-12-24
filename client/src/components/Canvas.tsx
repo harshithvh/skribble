@@ -47,7 +47,6 @@ const Canvas = ({ id }: { id: string | undefined }) => {
 		id: "",
 	});
 
-	//Will run to set board dimesions
 	useEffect(() => {
 		const updateStageSize = () => {
 			if (boardRef.current) {
@@ -63,24 +62,20 @@ const Canvas = ({ id }: { id: string | undefined }) => {
 		};
 	}, [stageHeight, stageWidth]);
 
-	//Will run when Joining Room
 	useEffect(() => {
 		socket.emit("join", { id: id, user: userData?.name });
 	}, [id, userData?.name]);
 
-	//to show real-time drawing and cursor
 	useEffect(() => {
 		socket.on("drawings", (data) => {
 			setOtherCursor(data[0]);
 			const newLines = data[1];
-			console.log(newLines);
 			setLines([...lines, newLines]);
 			setUndoStack([...undoStack, [...lines, newLines]]);
 			setRedoStack([]);
 		});
 	}, [lines, undoStack]);
 
-	//messenging
 	useEffect(() => {
 		const messageObj = { message: message, user: userData?.name, id: id };
 		socket.emit("message", messageObj);
@@ -185,22 +180,27 @@ const Canvas = ({ id }: { id: string | undefined }) => {
 	return (
 		<div
 			ref={boardRef}
-			className="border border-5 border-black bg-white"
+			className="border border-3 rounded bg-light shadow-sm"
 			style={{
 				height: "93%",
 				width: "98%",
-			}}>
+				overflow: "hidden",
+				display: "flex",
+				flexDirection: "column",
+			}}
+		>
 			{otherCursor.visible && <OtherCursor cursor={otherCursor} />}
 			<div
 				style={{
 					width: "100%",
-					padding: "0.4vw",
+					padding: "0.5rem",
 					display: "flex",
 					alignItems: "center",
-					backgroundColor: "lightgray",
-					justifyContent: "center",
-					gap: "3vw",
-				}}>
+					backgroundColor: "#f8f9fa",
+					justifyContent: "space-between",
+					boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+				}}
+			>
 				{newMessage.message != "" && (
 					<div
 						style={{
@@ -215,49 +215,43 @@ const Canvas = ({ id }: { id: string | undefined }) => {
 					</div>
 				)}
 				<Link to="/">
-					<Button
-						variant="dark"
-						>
+					<Button variant="primary" size="sm">
 						Home
 					</Button>
 				</Link>
-				<Button
-					variant="dark"
-					onClick={handleUndo}>
-					Undo
+				<Button variant="secondary" size="sm" onClick={handleUndo}>
+				    Revert
 				</Button>
-				<Button
-					variant="dark"
-					onClick={handleRedo}>
-					Redo
+				<Button variant="secondary" size="sm" onClick={handleRedo}>
+						Repeat
 				</Button>
-				<Button
-					variant="dark"
-					onClick={clearCanvas}>
+				<Button variant="danger" size="sm" onClick={clearCanvas}>
 					Clear Canvas
 				</Button>
 				<input
 					type="color"
 					name="color"
+					value={color}
 					onChange={(e) => {
 						setColor(e.target.value);
 					}}
-				/>
+					style={{
+						border: "none",
+						borderRadius: "4px",
+						height: "32px",
+						width: "32px",
+					}}/>
 				<Form.Range
 					onChange={(e) => {
-						setWidth(parseInt(e.target.value)/10);
+						setWidth(parseInt(e.target.value) / 10);
 					}}
-					style={{ width: "100px", color: "black" }}
+					style={{ width: "100px" }}
 				/>
-				<Button
-					variant="dark"
-					onClick={saveAsImage}>
-					Save as Image
+				<Button variant="success" size="sm" onClick={saveAsImage}>
+					Download Image
 				</Button>
-				<Button
-					variant="dark"
-					onClick={saveAsPDF}>
-					Save as PDF
+				<Button variant="success" size="sm" onClick={saveAsPDF}>
+					Download PDF
 				</Button>
 				<MessageForm setMessage={setMessage} />
 			</div>
@@ -265,11 +259,15 @@ const Canvas = ({ id }: { id: string | undefined }) => {
 			<Stage
 				width={stageWidth}
 				height={stageHeight}
-				style={{ border: "1px solid" }}
+				style={{
+					border: "1px solid #dee2e6",
+					backgroundColor: "#ffffff",
+				}}
 				onMouseDown={handleMouseDown}
 				onMousemove={handleMouseMove}
 				onMouseup={handleMouseUp}
-				ref={stageRef}>
+				ref={stageRef}
+			>
 				<Layer>
 					{lines.map((line, i) => (
 						<Line

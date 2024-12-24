@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
 
 
 app.get("/ping", (req, res) => {
-    res.send("pongo");
+    res.send("pong");
 });
 
 server.listen(3000, () => {

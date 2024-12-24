@@ -14,8 +14,8 @@ const useAuth = () => {
 
         const client = new Keycloak({
           url: "http://localhost:8080",
-          realm: "whiteboard-realm-react",
-          clientId: "whiteboard-client-react",
+          realm: "SKRIBBLE",
+          clientId: "whiteboard-client",
         });
         console.log(client);
         
@@ -34,7 +34,7 @@ const useAuth = () => {
             console.error('Failed to initialize Keycloak:', error);
         });
     }, []);
-    
+
     const logout = () => {
         if (keycloakRef.current) {
             keycloakRef.current.logout({
